@@ -247,7 +247,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductVariant"
+                "$ref": "#/components/schemas/CreateProductVariant"
               }
             }
           }
@@ -429,6 +429,29 @@
   },
   "components": {
     "schemas": {
+      "CreateProductVariant": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "price"
+        ],
+        "title": "CreateProductVariant"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {

@@ -18,6 +18,11 @@ class UpdateProduct(BaseModel):
     image_url: str
     price: float
 
+class CreateProductVariant(BaseModel):
+    id: str
+    name: str
+    price: float
+
 class ProductVariant(BaseModel):
     id: str
     product_id: str
@@ -91,7 +96,8 @@ async def read_product_variant(product_id: str, variant_id: str) -> ProductVaria
     return variant
 
 @app.post("/products/{product_id}/variants")
-async def create_product_variant(product_id: str, variant: ProductVariant) -> ProductVariant:
+async def create_product_variant(product_id: str, create_variant: CreateProductVariant) -> ProductVariant:
+    variant = ProductVariant(product_id=product_id, **create_variant.model_dump())
     db["variants"][variant.id] = variant
     return variant
 
