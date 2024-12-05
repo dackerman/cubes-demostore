@@ -5,10 +5,10 @@
     "version": "0.1.0"
   },
   "paths": {
-    "products": {
+    "/products": {
       "get": {
         "summary": "Read Products",
-        "operationId": "read_productsproducts_get",
+        "operationId": "read_products_products_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -19,7 +19,43 @@
                     "$ref": "#/components/schemas/Product"
                   },
                   "type": "array",
-                  "title": "Response Read Productsproducts Get"
+                  "title": "Response Read Products Products Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Product",
+        "operationId": "create_product_products_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -132,44 +168,6 @@
             "content": {
               "application/json": {
                 "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/products": {
-      "post": {
-        "summary": "Create Product",
-        "operationId": "create_product_products_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
               }
             }
           },

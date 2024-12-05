@@ -31,7 +31,7 @@ db: DB= {
 
 app = FastAPI()
 
-@app.get("products")
+@app.get("/products")
 async def read_products() -> List[Product]:
     return list(db["products"].values())
 
