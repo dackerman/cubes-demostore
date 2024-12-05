@@ -12,9 +12,19 @@ class Product(BaseModel):
     price: float
 
 
+class UpdateProduct(BaseModel):
+    name: str
+    description: str
+    image_url: str
+    price: float
+
 class ProductVariant(BaseModel):
     id: str
     product_id: str
+    name: str
+    price: float
+
+class UpdateProductVariant(BaseModel):
     name: str
     price: float
 
@@ -54,7 +64,10 @@ async def create_product(product: Product) -> Product:
 
 
 @app.put("/products/{product_id}")
-async def update_product(product_id: str, product: Product) -> Product:
+async def update_product(product_id: str, update_product: UpdateProduct) -> Product:
+    if product_id not in db["products"]:
+        raise HTTPException(status_code=404, detail="Product not found")
+    product = db["products"][product_id].model_copy(update=update_product.model_dump())
     db["products"][product_id] = product
     return product
 
@@ -83,7 +96,10 @@ async def create_product_variant(product_id: str, variant: ProductVariant) -> Pr
     return variant
 
 @app.put("/products/{product_id}/variants/{variant_id}")
-async def update_product_variant(product_id: str, variant_id: str, variant: ProductVariant) -> ProductVariant:
+async def update_product_variant(product_id: str, variant_id: str, update_variant: UpdateProductVariant) -> ProductVariant:
+    if variant_id not in db["variants"]:
+        raise HTTPException(status_code=404, detail="Variant not found")
+    variant = db["variants"][variant_id].model_copy(update=update_variant.model_dump())
     db["variants"][variant_id] = variant
     return variant
 

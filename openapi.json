@@ -120,7 +120,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/UpdateProduct"
               }
             }
           }
@@ -351,7 +351,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductVariant"
+                "$ref": "#/components/schemas/UpdateProductVariant"
               }
             }
           }
@@ -515,6 +515,52 @@
           "success"
         ],
         "title": "Success"
+      },
+      "UpdateProduct": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "image_url",
+          "price"
+        ],
+        "title": "UpdateProduct"
+      },
+      "UpdateProductVariant": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "price"
+        ],
+        "title": "UpdateProductVariant"
       },
       "ValidationError": {
         "properties": {
