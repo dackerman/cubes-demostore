@@ -167,7 +167,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
               }
             }
           },
@@ -405,7 +407,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
               }
             }
           },
@@ -498,6 +502,19 @@
           "price"
         ],
         "title": "ProductVariant"
+      },
+      "Success": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "title": "Success"
       },
       "ValidationError": {
         "properties": {

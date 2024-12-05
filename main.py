@@ -23,6 +23,9 @@ class DB(TypedDict):
     products: Dict[str, Product]
     variants: Dict[str, ProductVariant]
 
+class Success(TypedDict):
+    success: bool
+
 
 db: DB= {
     "products": {},
@@ -56,10 +59,11 @@ async def update_product(product_id: str, product: Product) -> Product:
     return product
 
 @app.delete("/products/{product_id}")
-async def delete_product(product_id: str):
+async def delete_product(product_id: str) -> Success:
     if product_id not in db["products"]:
         raise HTTPException(status_code=404, detail="Product not found")
     del db["products"][product_id]
+    return Success(success=True)
 
 
 @app.get("/products/{product_id}/variants")
@@ -84,10 +88,11 @@ async def update_product_variant(product_id: str, variant_id: str, variant: Prod
     return variant
 
 @app.delete("/products/{product_id}/variants/{variant_id}")
-async def delete_product_variant(product_id: str, variant_id: str):
+async def delete_product_variant(product_id: str, variant_id: str) -> Success:
     if variant_id not in db["variants"]:
         raise HTTPException(status_code=404, detail="Variant not found")
     del db["variants"][variant_id]
+    return Success(success=True)
 
 
 def load():
