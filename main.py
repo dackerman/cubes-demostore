@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from typing import List, TypedDict
+from fastapi import FastAPI, HTTPException
+from typing import Dict, List, TypedDict
 from pydantic import BaseModel
 import json
 
@@ -20,52 +20,74 @@ class ProductVariant(BaseModel):
 
 
 class DB(TypedDict):
-    products: List[Product]
-    variants: List[ProductVariant]
+    products: Dict[str, Product]
+    variants: Dict[str, ProductVariant]
 
 
 db: DB= {
-    "products": [],
-    "variants": []
+    "products": {},
+    "variants": {}
 }
 
 app = FastAPI()
 
 @app.get("products")
 async def read_products() -> List[Product]:
-    return db["products"]
+    return list(db["products"].values())
 
 
 @app.get("/products/{product_id}")
-async def read_product(product_id):
-    return {"product_id": product_id}
+async def read_product(product_id: str) -> Product:
+    product = db["products"][product_id]
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
 
 
 @app.post("/products")
-async def create_product(product: Product):
+async def create_product(product: Product) -> Product:
+    db["products"][product.id] = product
     return product
 
 
 @app.put("/products/{product_id}")
-async def update_product(product_id, product: Product):
-    return {"product_id": product_id, "product": product}
+async def update_product(product_id: str, product: Product) -> Product:
+    db["products"][product_id] = product
+    return product
+
+@app.delete("/products/{product_id}")
+async def delete_product(product_id: str):
+    if product_id not in db["products"]:
+        raise HTTPException(status_code=404, detail="Product not found")
+    del db["products"][product_id]
 
 
 @app.get("/products/{product_id}/variants")
-async def read_product_variants(product_id):
-    return []
+async def read_product_variants(product_id: str) -> List[ProductVariant]:
+    return list(filter(lambda variant: variant.product_id == product_id, db["variants"].values()))
 
 @app.get("/products/{product_id}/variants/{variant_id}")
-async def read_product_variant(product_id, variant_id):
-    return {"product_id": product_id, "variant_id": variant_id}
+async def read_product_variant(product_id: str, variant_id: str) -> ProductVariant:
+    variant = db["variants"].get(variant_id)
+    if not variant:
+        raise HTTPException(status_code=404, detail="Variant not found")
+    return variant
 
 @app.post("/products/{product_id}/variants")
-async def create_product_variant(product_id, variant: ProductVariant):
-    return {"product_id": product_id, "variant": variant}
+async def create_product_variant(product_id: str, variant: ProductVariant) -> ProductVariant:
+    db["variants"][variant.id] = variant
+    return variant
 
 @app.put("/products/{product_id}/variants/{variant_id}")
-async def update_product_variant(product_id, variant_id, variant: ProductVariant):
-    return {"product_id": product_id, "variant_id": variant_id, "variant": variant}
+async def update_product_variant(product_id: str, variant_id: str, variant: ProductVariant) -> ProductVariant:
+    db["variants"][variant_id] = variant
+    return variant
+
+@app.delete("/products/{product_id}/variants/{variant_id}")
+async def delete_product_variant(product_id: str, variant_id: str):
+    if variant_id not in db["variants"]:
+        raise HTTPException(status_code=404, detail="Variant not found")
+    del db["variants"][variant_id]
 
 
 def load():
@@ -74,7 +96,7 @@ def load():
         with open("db.json", "r") as f:
             db = json.load(f)
     except FileNotFoundError:
-        db = {}
+        pass
 
 def save():
     global db
