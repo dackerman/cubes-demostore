@@ -247,7 +247,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProductVariant"
+                "$ref": "#/components/schemas/ProductVariantFields"
               }
             }
           }
@@ -351,7 +351,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProductVariant"
+                "$ref": "#/components/schemas/ProductVariantFields"
               }
             }
           }
@@ -457,24 +457,6 @@
         ],
         "title": "CreateProduct"
       },
-      "CreateProductVariant": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "price": {
-            "type": "number",
-            "title": "Price"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name",
-          "price"
-        ],
-        "title": "CreateProductVariant"
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -523,6 +505,18 @@
       },
       "ProductVariant": {
         "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "addl_price": {
+            "type": "number",
+            "title": "Addl Price"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -530,24 +524,40 @@
           "product_id": {
             "type": "string",
             "title": "Product Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "price": {
-            "type": "number",
-            "title": "Price"
           }
         },
         "type": "object",
         "required": [
-          "id",
-          "product_id",
           "name",
-          "price"
+          "addl_price",
+          "image_url",
+          "id",
+          "product_id"
         ],
         "title": "ProductVariant"
+      },
+      "ProductVariantFields": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "addl_price": {
+            "type": "number",
+            "title": "Addl Price"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "addl_price",
+          "image_url"
+        ],
+        "title": "ProductVariantFields"
       },
       "Success": {
         "properties": {
@@ -589,24 +599,6 @@
           "price"
         ],
         "title": "UpdateProduct"
-      },
-      "UpdateProductVariant": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "price": {
-            "type": "number",
-            "title": "Price"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name",
-          "price"
-        ],
-        "title": "UpdateProductVariant"
       },
       "ValidationError": {
         "properties": {

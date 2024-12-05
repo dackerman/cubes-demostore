@@ -25,19 +25,15 @@ class UpdateProduct(BaseModel):
     image_url: str
     price: float
 
-class CreateProductVariant(BaseModel):
-    name: str
-    price: float
 
-class ProductVariant(BaseModel):
+class ProductVariantFields(BaseModel):
+    name: str
+    addl_price: float
+    image_url: str
+
+class ProductVariant(ProductVariantFields):
     id: str
     product_id: str
-    name: str
-    price: float
-
-class UpdateProductVariant(BaseModel):
-    name: str
-    price: float
 
 
 class DB(TypedDict):
@@ -104,14 +100,14 @@ async def read_product_variant(product_id: str, variant_id: str) -> ProductVaria
     return variant
 
 @app.post("/products/{product_id}/variants")
-async def create_product_variant(product_id: str, create_variant: CreateProductVariant) -> ProductVariant:
+async def create_product_variant(product_id: str, create_variant: ProductVariantFields) -> ProductVariant:
     newid = generate_id()
     variant = ProductVariant(product_id=product_id, id=newid, **create_variant.model_dump())
     db["variants"][variant.id] = variant
     return variant
 
 @app.put("/products/{product_id}/variants/{variant_id}")
-async def update_product_variant(product_id: str, variant_id: str, update_variant: UpdateProductVariant) -> ProductVariant:
+async def update_product_variant(product_id: str, variant_id: str, update_variant: ProductVariantFields) -> ProductVariant:
     if variant_id not in db["variants"]:
         raise HTTPException(status_code=404, detail="Variant not found")
     variant = db["variants"][variant_id].model_copy(update=update_variant.model_dump())
