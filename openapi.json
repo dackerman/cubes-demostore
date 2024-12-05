@@ -33,7 +33,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/CreateProduct"
               }
             }
           },
@@ -429,12 +429,36 @@
   },
   "components": {
     "schemas": {
+      "CreateProduct": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "image_url",
+          "price"
+        ],
+        "title": "CreateProduct"
+      },
       "CreateProductVariant": {
         "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
           "name": {
             "type": "string",
             "title": "Name"
@@ -446,7 +470,6 @@
         },
         "type": "object",
         "required": [
-          "id",
           "name",
           "price"
         ],

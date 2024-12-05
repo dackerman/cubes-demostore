@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from typing import Dict, List, TypedDict
 from pydantic import BaseModel
 import json
+import random
+import string
 
 
 class Product(BaseModel):
@@ -11,6 +13,11 @@ class Product(BaseModel):
     image_url: str
     price: float
 
+class CreateProduct(BaseModel):
+    name: str
+    description: str
+    image_url: str
+    price: float
 
 class UpdateProduct(BaseModel):
     name: str
@@ -19,7 +26,6 @@ class UpdateProduct(BaseModel):
     price: float
 
 class CreateProductVariant(BaseModel):
-    id: str
     name: str
     price: float
 
@@ -63,7 +69,9 @@ async def read_product(product_id: str) -> Product:
 
 
 @app.post("/products")
-async def create_product(product: Product) -> Product:
+async def create_product(create_product: CreateProduct) -> Product:
+    newid = generate_id()
+    product = Product(id=newid, **create_product.model_dump())
     db["products"][product.id] = product
     return product
 
@@ -97,7 +105,8 @@ async def read_product_variant(product_id: str, variant_id: str) -> ProductVaria
 
 @app.post("/products/{product_id}/variants")
 async def create_product_variant(product_id: str, create_variant: CreateProductVariant) -> ProductVariant:
-    variant = ProductVariant(product_id=product_id, **create_variant.model_dump())
+    newid = generate_id()
+    variant = ProductVariant(product_id=product_id, id=newid, **create_variant.model_dump())
     db["variants"][variant.id] = variant
     return variant
 
@@ -129,3 +138,7 @@ def save():
     global db
     with open("db.json", "w") as f:
         json.dump(db, f)
+
+
+def generate_id(length: int=10):
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
