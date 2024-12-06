@@ -461,7 +461,7 @@
             "title": "Image Url"
           },
           "price": {
-            "type": "number",
+            "type": "integer",
             "title": "Price"
           }
         },
@@ -491,7 +491,7 @@
             "title": "Image Url"
           },
           "price": {
-            "type": "number",
+            "type": "integer",
             "title": "Price"
           }
         },
@@ -518,9 +518,9 @@
             "type": "string",
             "title": "Name"
           },
-          "addl_price": {
-            "type": "number",
-            "title": "Addl Price"
+          "price": {
+            "type": "integer",
+            "title": "Price"
           },
           "image_url": {
             "type": "string",
@@ -532,7 +532,7 @@
           "variant_id",
           "product_id",
           "name",
-          "addl_price",
+          "price",
           "image_url"
         ],
         "title": "ProductVariant",
@@ -544,9 +544,9 @@
             "type": "string",
             "title": "Name"
           },
-          "addl_price": {
-            "type": "number",
-            "title": "Addl Price"
+          "price": {
+            "type": "integer",
+            "title": "Price"
           },
           "image_url": {
             "type": "string",
@@ -556,7 +556,7 @@
         "type": "object",
         "required": [
           "name",
-          "addl_price",
+          "price",
           "image_url"
         ],
         "title": "ProductVariantData"

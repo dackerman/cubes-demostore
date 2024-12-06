@@ -86,7 +86,7 @@ async def create_product_variant(product_id: str, create_variant: ProductVariant
         "product_id": product_id,
         "variant_id": str(uuid.uuid4()),
         "name": create_variant.name,
-        "addl_price": create_variant.addl_price,
+        "price": create_variant.price,
         "image_url": create_variant.image_url,
     })
     return variant
@@ -97,7 +97,7 @@ async def update_product_variant(product_id: str, variant_id: str, update_varian
         where={"variant_id": variant_id}, 
         data={
             "name": update_variant.name,
-            "addl_price": update_variant.addl_price,
+            "price": update_variant.price,
             "image_url": update_variant.image_url
         }
     )
