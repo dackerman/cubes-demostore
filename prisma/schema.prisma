@@ -12,7 +12,7 @@ datasource db {
 }
 
 model Product {
-    id Int @id @default(autoincrement())
+    product_id String @id
     name String
     description String
     image_url String
@@ -20,7 +20,7 @@ model Product {
 }
 
 model ProductVariant {
-    id Int @id @default(autoincrement())
+    variant_id String @id
     product_id String
     name String
     addl_price Float
