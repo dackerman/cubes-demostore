@@ -1,140 +1,86 @@
 from fastapi import FastAPI, HTTPException
 from typing import Dict, List, TypedDict
-from pydantic import BaseModel
-import json
-import random
-import string
+from prisma import Prisma
+from prisma.types import ProductCreateInput, ProductUpdateInput, ProductVariantCreateInput, ProductVariantUpdateInput
+from prisma.models import Product, ProductVariant
+from contextlib import asynccontextmanager
 
-
-class Product(BaseModel):
-    id: str
-    name: str
-    description: str
-    image_url: str
-    price: float
-
-class CreateProduct(BaseModel):
-    name: str
-    description: str
-    image_url: str
-    price: float
-
-class UpdateProduct(BaseModel):
-    name: str
-    description: str
-    image_url: str
-    price: float
-
-
-class ProductVariantFields(BaseModel):
-    name: str
-    addl_price: float
-    image_url: str
-
-class ProductVariant(ProductVariantFields):
-    id: str
-    product_id: str
-
-
-class DB(TypedDict):
-    products: Dict[str, Product]
-    variants: Dict[str, ProductVariant]
 
 class Success(TypedDict):
     success: bool
 
 
-db: DB= {
-    "products": {},
-    "variants": {}
-}
+prisma = Prisma()
 
-app = FastAPI()
+@asynccontextmanager
+async def startup_prisma(app: FastAPI):
+    await prisma.connect()
+    yield
+    await prisma.disconnect()
+
+app = FastAPI(lifespan=startup_prisma)
 
 @app.get("/products")
 async def read_products() -> List[Product]:
-    return list(db["products"].values())
+    return await prisma.product.find_many()
 
 
 @app.get("/products/{product_id}")
-async def read_product(product_id: str) -> Product:
-    product = db["products"][product_id]
-    if not product:
+async def read_product(product_id: int) -> Product:
+    product = await prisma.product.find_unique(where={"id": product_id})
+
+    if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
+
     return product
 
 
 @app.post("/products")
-async def create_product(create_product: CreateProduct) -> Product:
-    newid = generate_id()
-    product = Product(id=newid, **create_product.model_dump())
-    db["products"][product.id] = product
+async def create_product(create_product: ProductCreateInput) -> Product:
+    product = await prisma.product.create(data=create_product)
     return product
 
 
 @app.put("/products/{product_id}")
-async def update_product(product_id: str, update_product: UpdateProduct) -> Product:
-    if product_id not in db["products"]:
+async def update_product(product_id: int, update_product: ProductUpdateInput) -> Product:
+    product = await prisma.product.update(where={"id": product_id}, data=update_product)
+    if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    product = db["products"][product_id].model_copy(update=update_product.model_dump())
-    db["products"][product_id] = product
     return product
 
 @app.delete("/products/{product_id}")
-async def delete_product(product_id: str) -> Success:
-    if product_id not in db["products"]:
-        raise HTTPException(status_code=404, detail="Product not found")
-    del db["products"][product_id]
+async def delete_product(product_id: int) -> Success:
+    await prisma.product.delete(where={"id": product_id})
     return Success(success=True)
 
 
 @app.get("/products/{product_id}/variants")
-async def read_product_variants(product_id: str) -> List[ProductVariant]:
-    return list(filter(lambda variant: variant.product_id == product_id, db["variants"].values()))
+async def read_product_variants(product_id: int) -> List[ProductVariant]:
+    variants = await prisma.productvariant.find_many()
+    return list(filter(lambda variant: variant.product_id == product_id, variants))
 
 @app.get("/products/{product_id}/variants/{variant_id}")
-async def read_product_variant(product_id: str, variant_id: str) -> ProductVariant:
-    variant = db["variants"].get(variant_id)
+async def read_product_variant(product_id: int, variant_id: int) -> ProductVariant:
+    variant = await prisma.productvariant.find_unique(where={"id": variant_id})
+
+    if variant is None:
+        raise HTTPException(status_code=404, detail="Variant not found")
+
+    return variant
+
+@app.post("/products/{product_id}/variants")
+async def create_product_variant(product_id: str, create_variant: ProductVariantCreateInput) -> ProductVariant:
+    variant = await prisma.productvariant.create(data=create_variant)
+    return variant
+
+@app.put("/products/{product_id}/variants/{variant_id}")
+async def update_product_variant(product_id: int, variant_id: int, update_variant: ProductVariantUpdateInput) -> ProductVariant:
+    variant = await prisma.productvariant.update(where={"id": variant_id}, data=update_variant)
     if not variant:
         raise HTTPException(status_code=404, detail="Variant not found")
     return variant
 
-@app.post("/products/{product_id}/variants")
-async def create_product_variant(product_id: str, create_variant: ProductVariantFields) -> ProductVariant:
-    newid = generate_id()
-    variant = ProductVariant(product_id=product_id, id=newid, **create_variant.model_dump())
-    db["variants"][variant.id] = variant
-    return variant
-
-@app.put("/products/{product_id}/variants/{variant_id}")
-async def update_product_variant(product_id: str, variant_id: str, update_variant: ProductVariantFields) -> ProductVariant:
-    if variant_id not in db["variants"]:
-        raise HTTPException(status_code=404, detail="Variant not found")
-    variant = db["variants"][variant_id].model_copy(update=update_variant.model_dump())
-    db["variants"][variant_id] = variant
-    return variant
-
 @app.delete("/products/{product_id}/variants/{variant_id}")
-async def delete_product_variant(product_id: str, variant_id: str) -> Success:
-    if variant_id not in db["variants"]:
-        raise HTTPException(status_code=404, detail="Variant not found")
-    del db["variants"][variant_id]
+async def delete_product_variant(product_id: int, variant_id: int) -> Success:
+    await prisma.productvariant.delete(where={"id": variant_id})
     return Success(success=True)
-
-
-def load():
-    global db
-    try:
-        with open("db.json", "r") as f:
-            db = json.load(f)
-    except FileNotFoundError:
-        pass
-
-def save():
-    global db
-    with open("db.json", "w") as f:
-        json.dump(db, f)
-
-
-def generate_id(length: int=10):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
