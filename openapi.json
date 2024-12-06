@@ -33,7 +33,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductCreateInput"
+                "$ref": "#/components/schemas/ProductData"
               }
             }
           },
@@ -120,7 +120,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductUpdateInput"
+                "$ref": "#/components/schemas/ProductData"
               }
             }
           }
@@ -247,7 +247,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductVariantCreateInput"
+                "$ref": "#/components/schemas/ProductVariantData"
               }
             }
           }
@@ -351,7 +351,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductVariantUpdateInput"
+                "$ref": "#/components/schemas/ProductVariantData"
               }
             }
           }
@@ -476,12 +476,8 @@
         "title": "Product",
         "description": "Represents a Product record"
       },
-      "ProductCreateInput": {
+      "ProductData": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
           "name": {
             "type": "string",
             "title": "Name"
@@ -506,73 +502,7 @@
           "image_url",
           "price"
         ],
-        "title": "ProductCreateInput",
-        "description": "Required arguments to the Product create method"
-      },
-      "ProductUpdateInput": {
-        "properties": {
-          "id": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/_IntSetInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntDivideInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntMultiplyInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntIncrementInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntDecrementInput"
-              },
-              {
-                "type": "integer"
-              }
-            ],
-            "title": "Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "description": {
-            "type": "string",
-            "title": "Description"
-          },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          },
-          "price": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/_FloatSetInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatDivideInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatMultiplyInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatIncrementInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatDecrementInput"
-              },
-              {
-                "type": "number"
-              }
-            ],
-            "title": "Price"
-          }
-        },
-        "type": "object",
-        "title": "ProductUpdateInput",
-        "description": "Optional arguments for updating a record"
+        "title": "ProductData"
       },
       "ProductVariant": {
         "properties": {
@@ -608,16 +538,8 @@
         "title": "ProductVariant",
         "description": "Represents a ProductVariant record"
       },
-      "ProductVariantCreateInput": {
+      "ProductVariantData": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "product_id": {
-            "type": "string",
-            "title": "Product Id"
-          },
           "name": {
             "type": "string",
             "title": "Name"
@@ -633,78 +555,11 @@
         },
         "type": "object",
         "required": [
-          "product_id",
           "name",
           "addl_price",
           "image_url"
         ],
-        "title": "ProductVariantCreateInput",
-        "description": "Required arguments to the ProductVariant create method"
-      },
-      "ProductVariantUpdateInput": {
-        "properties": {
-          "id": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/_IntSetInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntDivideInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntMultiplyInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntIncrementInput"
-              },
-              {
-                "$ref": "#/components/schemas/_IntDecrementInput"
-              },
-              {
-                "type": "integer"
-              }
-            ],
-            "title": "Id"
-          },
-          "product_id": {
-            "type": "string",
-            "title": "Product Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "addl_price": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/_FloatSetInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatDivideInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatMultiplyInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatIncrementInput"
-              },
-              {
-                "$ref": "#/components/schemas/_FloatDecrementInput"
-              },
-              {
-                "type": "number"
-              }
-            ],
-            "title": "Addl Price"
-          },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          }
-        },
-        "type": "object",
-        "title": "ProductVariantUpdateInput",
-        "description": "Optional arguments for updating a record"
+        "title": "ProductVariantData"
       },
       "Success": {
         "properties": {
@@ -751,136 +606,6 @@
           "type"
         ],
         "title": "ValidationError"
-      },
-      "_FloatDecrementInput": {
-        "properties": {
-          "decrement": {
-            "type": "number",
-            "title": "Decrement"
-          }
-        },
-        "type": "object",
-        "required": [
-          "decrement"
-        ],
-        "title": "_FloatDecrementInput"
-      },
-      "_FloatDivideInput": {
-        "properties": {
-          "divide": {
-            "type": "number",
-            "title": "Divide"
-          }
-        },
-        "type": "object",
-        "required": [
-          "divide"
-        ],
-        "title": "_FloatDivideInput"
-      },
-      "_FloatIncrementInput": {
-        "properties": {
-          "increment": {
-            "type": "number",
-            "title": "Increment"
-          }
-        },
-        "type": "object",
-        "required": [
-          "increment"
-        ],
-        "title": "_FloatIncrementInput"
-      },
-      "_FloatMultiplyInput": {
-        "properties": {
-          "multiply": {
-            "type": "number",
-            "title": "Multiply"
-          }
-        },
-        "type": "object",
-        "required": [
-          "multiply"
-        ],
-        "title": "_FloatMultiplyInput"
-      },
-      "_FloatSetInput": {
-        "properties": {
-          "set": {
-            "type": "number",
-            "title": "Set"
-          }
-        },
-        "type": "object",
-        "required": [
-          "set"
-        ],
-        "title": "_FloatSetInput"
-      },
-      "_IntDecrementInput": {
-        "properties": {
-          "decrement": {
-            "type": "integer",
-            "title": "Decrement"
-          }
-        },
-        "type": "object",
-        "required": [
-          "decrement"
-        ],
-        "title": "_IntDecrementInput"
-      },
-      "_IntDivideInput": {
-        "properties": {
-          "divide": {
-            "type": "integer",
-            "title": "Divide"
-          }
-        },
-        "type": "object",
-        "required": [
-          "divide"
-        ],
-        "title": "_IntDivideInput"
-      },
-      "_IntIncrementInput": {
-        "properties": {
-          "increment": {
-            "type": "integer",
-            "title": "Increment"
-          }
-        },
-        "type": "object",
-        "required": [
-          "increment"
-        ],
-        "title": "_IntIncrementInput"
-      },
-      "_IntMultiplyInput": {
-        "properties": {
-          "multiply": {
-            "type": "integer",
-            "title": "Multiply"
-          }
-        },
-        "type": "object",
-        "required": [
-          "multiply"
-        ],
-        "title": "_IntMultiplyInput"
-      },
-      "_IntSetInput": {
-        "properties": {
-          "set": {
-            "type": "integer",
-            "title": "Set"
-          }
-        },
-        "type": "object",
-        "required": [
-          "set"
-        ],
-        "title": "_IntSetInput"
       }
     }
   }
