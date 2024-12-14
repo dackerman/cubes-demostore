@@ -68,8 +68,7 @@ async def delete_product(product_id: str) -> Success:
 
 @app.get("/products/{product_id}/variants")
 async def read_product_variants(product_id: str) -> List[ProductVariant]:
-    variants = await prisma.productvariant.find_many()
-    return list(filter(lambda variant: variant.product_id == product_id, variants))
+    return await prisma.productvariant.find_many(where={"product_id": product_id})
 
 @app.get("/products/{product_id}/variants/{variant_id}")
 async def read_product_variant(product_id: str, variant_id: str) -> ProductVariant:
